@@ -5,6 +5,8 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Home from './components/Home';
 import Game from './components/Game';
 
+
+
 class App extends Component {
   render() {
     return (
@@ -20,4 +22,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default App

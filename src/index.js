@@ -1,18 +1,47 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import { Provider } from 'react-redux';
-import store from './redux/store';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
+import { createStore, combineReducers, applyMiddleware } from 'redux'
+import createSagaMiddleware from 'redux-saga'
+import cards from './reducers/cards_reducer'
+import messages from './reducers/messages'
+import users from './reducers/users'
+
+import './index.css'
+import App from './App'
+import registerServiceWorker from './registerServiceWorker'
+import reducers from './reducers'
+import logger from 'redux-logger'
+import thunk from 'redux-thunk'
+import handleNewMessage from './sagas'
+import setupSocket from './sockets'
+import username from './utils/name'
+import {fetchCards} from './actions/index'
 import 'bootswatch/dist/sandstone/bootstrap.min.css';
-import { fetchCards } from './redux/actions'
 
-let newStore = store();
+const sagaMiddleware = createSagaMiddleware()
 
-newStore.dispatch(fetchCards())
+const rootReducer = combineReducers({
+  cards,
+  messages,
+  users
+})
+
+const store = createStore(
+  rootReducer,
+  applyMiddleware(sagaMiddleware, logger, thunk)
+)
+
+store.dispatch(fetchCards())
+
+const socket = setupSocket(store.dispatch, username)
+
+sagaMiddleware.run(handleNewMessage, { socket, username })
 
 ReactDOM.render(
-  <Provider store = { newStore }>
+  <Provider store={store}>
     <App />
-  </Provider>
-  , document.getElementById('root'));
+  </Provider>,
+  document.getElementById('root')
+)
+registerServiceWorker()

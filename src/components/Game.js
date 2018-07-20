@@ -13,7 +13,7 @@ const Game = (props) => {
       <HomeNav />
       <Container >
         <Row >
-          <Col xs="4">
+          <Col id= "gameCard" xs="4">
             <GameCard />
           </Col>
           <Col xs="8">

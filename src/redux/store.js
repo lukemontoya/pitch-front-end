@@ -1,10 +1,15 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
-import cards from './reducers'
+
 import thunk from 'redux-thunk'
 import logger from 'redux-logger'
+import cards from './reducers/cards_reducer'
+import messages from './reducers/messages'
+import users from './reducers/users'
 
 const rootReducer = combineReducers({
-  cards
+  cards,
+  messages,
+  users
 })
 
 const middleWare = [thunk, logger]
